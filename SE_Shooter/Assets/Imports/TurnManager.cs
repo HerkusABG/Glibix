@@ -14,8 +14,7 @@ public class TurnManager : MonoBehaviour
             if(enemy != null)
             {
                 enemy.MoveEnemy(playerPositionInput);
-            }
-            
+            }       
         }
     }
 }

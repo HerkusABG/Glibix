@@ -5,7 +5,12 @@ public class EnemyScript : MonoBehaviour
 
     public List<Vector2> movementDirections;
     public List<float> distances;
+    public int enemyHealth;
 
+    private void Start()
+    {
+        enemyHealth = 1;
+    }
     public void MoveEnemy(Vector3 playerLocVector)
     {
         MeasureDistances(playerLocVector);
@@ -14,18 +19,27 @@ public class EnemyScript : MonoBehaviour
         for (int i = 0; i < movementDirections.Count; i++)
         {
             possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
-            if(TileDetector.instance.CanIMoveHere(transform.position, possibleDelta))
+            if(TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false) == 1)
             {
                 Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
+                break;
             }
         }
             
         
     }
-
-    private void Update()
+    
+    public bool TakeDamageAndCheckIfDead()
     {
-
+        enemyHealth--;
+        if(enemyHealth <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     private void MeasureDistances(Vector3 playerLocVector)
     {
@@ -51,7 +65,7 @@ public class EnemyScript : MonoBehaviour
         {
             for (int i = 0; i < distances.Count - 1; i++)
             {
-                if (distances[i] < distances[i + 1])
+                if (distances[i] > distances[i + 1])
                 {
                     tempFloat = distances[i];
                     distances[i] = distances[i + 1];

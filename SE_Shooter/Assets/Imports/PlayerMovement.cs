@@ -10,23 +10,35 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     TurnManager turnManagerAccess;
 
+    PlayerCombat playerCombatAccess;
+
     private void Start()
     {
         canMove = true;
+        playerCombatAccess = GetComponent<PlayerCombat>();
     }
     private void Update()
     {
         if(AreInputsDetected() && canMove)
-        { 
-            if(TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector()))
+        {
+            int movementStatus = TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector(), true);
+            if (movementStatus == 0)
             {
-                canMove = false;
-                MovePlayer();
+                playerCombatAccess.Attack();
             }
-            
-        }
-        
+            else if(movementStatus == 1)
+            {
+                StartMovePlayer();
+            }
+        }    
     }
+
+    public void StartMovePlayer()
+    {
+        canMove = false;
+        MovePlayer();
+    }
+
     private bool AreInputsDetected()
     {
         horizontalInputFloat = Input.GetAxisRaw("Horizontal");
