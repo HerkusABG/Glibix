@@ -4,6 +4,7 @@ public class LevelGenerator : MonoBehaviour
 {
     public GameObject tileInstance;
     public GameObject enemyInstance;
+    public GameObject obstacleInstance;
 
     [SerializeField]
     Vector2 fieldDimensions;
@@ -11,6 +12,8 @@ public class LevelGenerator : MonoBehaviour
     Vector2 playerSpawnDimensions;
     [SerializeField]
     Vector2 enemySpawnDimensions;
+    [SerializeField]
+    Vector2 obstacleSpawnDimensions;
 
     [SerializeField]
     PlayerMovement playerMovementAccess;
@@ -24,6 +27,7 @@ public class LevelGenerator : MonoBehaviour
         GenerateLevel((int)fieldDimensions.x, (int)fieldDimensions.y);
         SpawnPlayer();
         SpawnEnemies();
+        SpawnObstacle();
     }
 
     private void SpawnPlayer()
@@ -36,6 +40,12 @@ public class LevelGenerator : MonoBehaviour
         GameObject enemyClone = Instantiate(enemyInstance, new Vector3(enemySpawnDimensions.x, 1, enemySpawnDimensions.y), Quaternion.identity);
         enemyClone.SetActive(true);
         turnManagerAccess.enemyList.Add(enemyClone.GetComponent<EnemyScript>());
+    }
+
+    private void SpawnObstacle()
+    {
+        GameObject obstacleClone = Instantiate(obstacleInstance, new Vector3(obstacleSpawnDimensions.x, 1, obstacleSpawnDimensions.y), Quaternion.identity);
+        obstacleClone.SetActive(true);
     }
     private void GenerateLevel(int inputX, int inputY)
     {

@@ -40,7 +40,7 @@ public class Interpolator : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         objectToMove.position = Vector3.Lerp(startPos, endPos, 1);
-        yield return new WaitForSeconds(0.075f);
+        //yield return new WaitForSeconds(0.075f);
         if(isPlayer)
         {
             //objectToMove.GetComponent<PlayerMovement>().canMove = true;

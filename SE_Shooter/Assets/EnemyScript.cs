@@ -6,38 +6,46 @@ public class EnemyScript : MonoBehaviour
     public List<Vector2> movementDirections;
     public List<float> distances;
     public int enemyHealth;
+    public int moveCycle, moveCycleCurrent;
 
     private void Start()
     {
-        enemyHealth = 1;
+        enemyHealth = 4;
+        moveCycle = 2;
+        moveCycleCurrent = 0;
     }
     public void MoveEnemy(Transform playerTransform)
     {
-        MeasureDistances(playerTransform.position);
-        //bool foundFreeTile = false;
-        Vector3 possibleDelta;
-        int outcomeId;
-        for (int i = 0; i < movementDirections.Count; i++)
+        moveCycleCurrent++;
+        if(moveCycleCurrent >= moveCycle)
         {
-            possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
-            outcomeId = TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false);
-            if(outcomeId == 1)
+            MeasureDistances(playerTransform.position);
+            Vector3 possibleDelta;
+            int outcomeId;
+            for (int i = 0; i < movementDirections.Count; i++)
             {
-                Destroy(playerTransform.gameObject);
-                Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
-                break;
+                possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
+                outcomeId = TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false);
+                if (outcomeId == 1)
+                {
+                    Destroy(playerTransform.gameObject);
+                    Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
+                    break;
+                }
+                else if (outcomeId == 3)
+                {
+                    Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
+                    break;
+                }
             }
-            else if (outcomeId == 2)
-            {
-                Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
-                break;
-            }
+            moveCycleCurrent = 0;
         }
     }
     
 
     public bool TakeDamageAndCheckIfDead()
     {
+        Debug.Log("took damage");
         enemyHealth--;
         if(enemyHealth <= 0)
         {

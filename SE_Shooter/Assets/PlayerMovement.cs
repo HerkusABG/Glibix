@@ -24,18 +24,23 @@ public class PlayerMovement : MonoBehaviour
             int outcomeId = TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector(), true);
             if (outcomeId == 0)
             {
+                canMove = false;
+
                 playerCombatAccess.Attack();
+                //Invoke("BeginTurnTransfer", 0.5f);
+                BeginTurnTransfer();
             }
-            else if(outcomeId == 2)
+            else if(outcomeId == 3)
             {
+                canMove = false;
+
                 StartMovePlayer();
             }
         }    
     }
 
     public void StartMovePlayer()
-    {
-        canMove = false;
+    {      
         MovePlayer();
     }
 
@@ -80,7 +85,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void BeginTurnTransfer()
     {
-        canMove = true;
-        turnManagerAccess.ExecuteEnemyTurns(transform);
+        //canMove = true;
+        StartCoroutine(turnManagerAccess.ExecuteEnemyTurns(transform));
+        //turnManagerAccess.ExecuteEnemyTurns(transform);
     }
 }

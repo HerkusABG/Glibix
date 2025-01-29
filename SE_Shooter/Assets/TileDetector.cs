@@ -29,9 +29,14 @@ public class TileDetector : MonoBehaviour
             {
                 return 1;
             }
+            else if(hitInfo.transform.gameObject.layer == 9)
+            {
+                Debug.Log("detected obstacle");
+                return 2;
+            }
             else
             {
-                return 2;
+                return 3;
             }
         }
         else

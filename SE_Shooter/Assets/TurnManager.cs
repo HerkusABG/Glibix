@@ -1,13 +1,15 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 
 public class TurnManager : MonoBehaviour
 {
     public List<EnemyScript> enemyList;
-    
+    [SerializeField]
+    PlayerMovement playerMovementAccess;
 
-    public void ExecuteEnemyTurns(Transform playerTransformInput)
+    public IEnumerator ExecuteEnemyTurns(Transform playerTransformInput)
     {
         foreach(EnemyScript enemy in enemyList)
         {
@@ -16,5 +18,7 @@ public class TurnManager : MonoBehaviour
                 enemy.MoveEnemy(playerTransformInput);
             }       
         }
+        yield return new WaitForSeconds(0.125f);
+        playerMovementAccess.canMove = true;
     }
 }
