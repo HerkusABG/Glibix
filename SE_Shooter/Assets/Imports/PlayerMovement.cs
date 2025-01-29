@@ -5,10 +5,10 @@ public class PlayerMovement : MonoBehaviour
 
     public float horizontalInputFloat, verticalInputFloat;
     public bool canMove;
-    public LayerMask groundLayerMask;
-
+    //public LayerMask groundLayerMask;
     Vector3 transformDelta;
-
+    [SerializeField]
+    TurnManager turnManagerAccess;
 
     private void Start()
     {
@@ -18,16 +18,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if(AreInputsDetected() && canMove)
         { 
-            if(CanIMoveHere(GetInputsAsVector()))
+            if(TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector()))
             {
                 canMove = false;
-                InitiateMovement();
+                MovePlayer();
             }
             
         }
         
     }
-
     private bool AreInputsDetected()
     {
         horizontalInputFloat = Input.GetAxisRaw("Horizontal");
@@ -47,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
         return transformDelta;
     }
 
-    private bool CanIMoveHere(Vector3 inputDelta)
+    /*private bool CanIMoveHere(Vector3 inputDelta)
     {
         Vector3 rayStartPos = transform.position + inputDelta;
         Debug.DrawRay(rayStartPos, Vector3.down * 3, Color.magenta, 5);
@@ -59,11 +58,17 @@ public class PlayerMovement : MonoBehaviour
         {
             return false;
         }
-    }
-    private void InitiateMovement()
+    } */
+    private void MovePlayer()
     {
         //Vector3 transformDelta = GetInputsAsVector();
         Vector3 endPosOutput = transform.position + transformDelta;
         Interpolator.instance.InterpolateMovement(gameObject, transform.position, endPosOutput, true);
+    }
+
+    public void BeginTurnTransfer()
+    {
+        canMove = true;
+        turnManagerAccess.ExecuteEnemyTurns(transform.position);
     }
 }

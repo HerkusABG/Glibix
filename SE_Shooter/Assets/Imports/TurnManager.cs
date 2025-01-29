@@ -1,16 +1,21 @@
 using UnityEngine;
+using System.Collections.Generic;
+
 
 public class TurnManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public List<EnemyScript> enemyList;
+    
 
-    // Update is called once per frame
-    void Update()
+    public void ExecuteEnemyTurns(Vector3 playerPositionInput)
     {
-        
+        foreach(EnemyScript enemy in enemyList)
+        {
+            if(enemy != null)
+            {
+                enemy.MoveEnemy(playerPositionInput);
+            }
+            
+        }
     }
 }

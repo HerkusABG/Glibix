@@ -43,7 +43,8 @@ public class Interpolator : MonoBehaviour
         yield return new WaitForSeconds(0.075f);
         if(isPlayer)
         {
-            objectToMove.GetComponent<PlayerMovement>().canMove = true;
+            //objectToMove.GetComponent<PlayerMovement>().canMove = true;
+            objectToMove.GetComponent<PlayerMovement>().BeginTurnTransfer();
         }
     }
 }

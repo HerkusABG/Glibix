@@ -15,6 +15,9 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     PlayerMovement playerMovementAccess;
 
+    [SerializeField]
+    TurnManager turnManagerAccess;
+
     
     void Start()
     {
@@ -30,7 +33,9 @@ public class LevelGenerator : MonoBehaviour
 
     private void SpawnEnemies()
     {
-        Instantiate(enemyInstance, new Vector3(enemySpawnDimensions.x, 0, enemySpawnDimensions.y), Quaternion.identity);
+        GameObject enemyClone = Instantiate(enemyInstance, new Vector3(enemySpawnDimensions.x, 1, enemySpawnDimensions.y), Quaternion.identity);
+        enemyClone.SetActive(true);
+        turnManagerAccess.enemyList.Add(enemyClone.GetComponent<EnemyScript>());
     }
     private void GenerateLevel(int inputX, int inputY)
     {
