@@ -304,7 +304,7 @@ MonoBehaviour:
   enemyInstance: {fileID: 1886973121}
   fieldDimensions: {x: 6, y: 8}
   playerSpawnDimensions: {x: 0, y: 0}
-  enemySpawnDimensions: {x: 2, y: 3}
+  enemySpawnDimensions: {x: 2, y: 4}
   playerMovementAccess: {fileID: 1350917297}
   turnManagerAccess: {fileID: 1323604823}
 --- !u!4 &546238573
@@ -570,7 +570,7 @@ GameObject:
   - component: {fileID: 1350917298}
   - component: {fileID: 1350917297}
   - component: {fileID: 1350917302}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -727,7 +727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hittableLayerMasks:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 448
   targetEnemy: {fileID: 0}
 --- !u!4 &1830793715
 Transform:

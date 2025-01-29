@@ -11,24 +11,31 @@ public class EnemyScript : MonoBehaviour
     {
         enemyHealth = 1;
     }
-    public void MoveEnemy(Vector3 playerLocVector)
+    public void MoveEnemy(Transform playerTransform)
     {
-        MeasureDistances(playerLocVector);
+        MeasureDistances(playerTransform.position);
         //bool foundFreeTile = false;
         Vector3 possibleDelta;
+        int outcomeId;
         for (int i = 0; i < movementDirections.Count; i++)
         {
             possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
-            if(TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false) == 1)
+            outcomeId = TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false);
+            if(outcomeId == 1)
+            {
+                Destroy(playerTransform.gameObject);
+                Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
+                break;
+            }
+            else if (outcomeId == 2)
             {
                 Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
                 break;
             }
         }
-            
-        
     }
     
+
     public bool TakeDamageAndCheckIfDead()
     {
         enemyHealth--;

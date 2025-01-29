@@ -7,13 +7,13 @@ public class TurnManager : MonoBehaviour
     public List<EnemyScript> enemyList;
     
 
-    public void ExecuteEnemyTurns(Vector3 playerPositionInput)
+    public void ExecuteEnemyTurns(Transform playerTransformInput)
     {
         foreach(EnemyScript enemy in enemyList)
         {
             if(enemy != null)
             {
-                enemy.MoveEnemy(playerPositionInput);
+                enemy.MoveEnemy(playerTransformInput);
             }       
         }
     }

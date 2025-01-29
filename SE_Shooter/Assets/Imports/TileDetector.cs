@@ -25,14 +25,18 @@ public class TileDetector : MonoBehaviour
                 }               
                 return 0;
             }
-            else
+            else if(hitInfo.transform.GetComponent<PlayerMovement>() != null)
             {
                 return 1;
+            }
+            else
+            {
+                return 2;
             }
         }
         else
         {
-            return 2;
+            return 3;
         }
     }
 }

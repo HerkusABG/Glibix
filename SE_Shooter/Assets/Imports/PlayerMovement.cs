@@ -21,12 +21,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if(AreInputsDetected() && canMove)
         {
-            int movementStatus = TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector(), true);
-            if (movementStatus == 0)
+            int outcomeId = TileDetector.instance.CanIMoveHere(transform.position, GetInputsAsVector(), true);
+            if (outcomeId == 0)
             {
                 playerCombatAccess.Attack();
             }
-            else if(movementStatus == 1)
+            else if(outcomeId == 2)
             {
                 StartMovePlayer();
             }
@@ -81,6 +81,6 @@ public class PlayerMovement : MonoBehaviour
     public void BeginTurnTransfer()
     {
         canMove = true;
-        turnManagerAccess.ExecuteEnemyTurns(transform.position);
+        turnManagerAccess.ExecuteEnemyTurns(transform);
     }
 }
