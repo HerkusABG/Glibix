@@ -2,15 +2,11 @@ using UnityEngine;
 
 public class CameraHolder : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    [SerializeField]
+    GameObject followObject;
+    
     void Update()
     {
-        
+        transform.position = followObject.transform.position;
     }
 }

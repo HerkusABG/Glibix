@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 public class EnemyScript : MonoBehaviour
 {
-
     public List<Vector2> movementDirections;
     public List<float> distances;
     public int enemyHealth;
@@ -14,20 +13,14 @@ public class EnemyScript : MonoBehaviour
     public delegate void SpecialAttackAction();
     public event SpecialAttackAction specialAttackEvent;
 
+
+    [SerializeField]
+    GameManager gameManagerAccess;
     
     public bool isDead;
 
     [SerializeField]
     EnemyManager enemyManagerAccess;
-    //TurnScript.restartGameEvent += RefereeReset;   
-    //public void CallNewWaveEvent()
-    //{
-    //if (newWaveEvent != null)
-    //{
-    //  Debug.Log("calling new wave event");
-    //    newWaveEvent();
-    //  }
-    //}
 
     public int myChoice;
     
@@ -88,7 +81,9 @@ public class EnemyScript : MonoBehaviour
                         myChoice = i;
                         if (outcomeId == 1)
                         {
-                            Destroy(playerTransform.gameObject);
+                            //Destroy(playerTransform.gameObject);
+                            //playerTransform.gameObject.SetActive(false);
+                            gameManagerAccess.CallDeathEvent();
                             Vector3 enemyEndPosition = transform.position + possibleDelta;
                             Interpolator.instance.InterpolateMovement(gameObject, transform.position, enemyEndPosition, false);
                             enemyManagerAccess.pickedPositionList.Add(enemyEndPosition);

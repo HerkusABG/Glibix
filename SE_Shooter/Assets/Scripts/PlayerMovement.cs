@@ -12,10 +12,20 @@ public class PlayerMovement : MonoBehaviour
 
     PlayerCombat playerCombatAccess;
 
+    [SerializeField]
+    GameManager gameManagerAccess;
+
     private void Start()
     {
+        gameManagerAccess.playerDeathEvent += PlayerDeath;
+        gameManagerAccess.restartEvent += ResetPlayer;
         canMove = true;
         playerCombatAccess = GetComponent<PlayerCombat>();
+    }
+
+    private void ResetPlayer()
+    {
+        canMove = true;
     }
     private void Update()
     {
@@ -38,6 +48,10 @@ public class PlayerMovement : MonoBehaviour
         }    
     }
 
+    private void PlayerDeath()
+    {
+        gameObject.SetActive(false);
+    }
     public void StartMovePlayer()
     {      
         MovePlayer();

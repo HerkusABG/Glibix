@@ -68,14 +68,7 @@ public class LevelGenerator : MonoBehaviour
         SpawnEnemies(7);
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            
-            StartCoroutine(GenerationCoroutine());
-        }
-    }
+    
 
     public void GenerateNewLevel()
     {
@@ -109,13 +102,15 @@ public class LevelGenerator : MonoBehaviour
     {
         Vector3 playerSpawnLocation = FindFreeSpot();
         playerMovementAccess.gameObject.transform.position = playerSpawnLocation;
-       
+        playerMovementAccess.gameObject.SetActive(true);
+
+
     }
 
     private Vector3 FindFreeSpot()
     {
         Vector3 freeSpotLocation = new Vector3((int)Random.Range(0, (int)fieldDimensions.x), 1, (int)Random.Range(0, (int)fieldDimensions.y));
-        Debug.Log(freeSpotLocation);
+        //Debug.Log(freeSpotLocation);
         int outcomeId = TileDetector.instance.CanIMoveHere(freeSpotLocation, new Vector3(0, 0, 0), false);
         while (outcomeId != 3)
         {
