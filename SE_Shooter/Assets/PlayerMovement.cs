@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
 
                 playerCombatAccess.Attack();
                 //Invoke("BeginTurnTransfer", 0.5f);
-                BeginTurnTransfer();
             }
             else if(outcomeId == 3)
             {
@@ -78,7 +77,6 @@ public class PlayerMovement : MonoBehaviour
     } */
     private void MovePlayer()
     {
-        //Vector3 transformDelta = GetInputsAsVector();
         Vector3 endPosOutput = transform.position + transformDelta;
         Interpolator.instance.InterpolateMovement(gameObject, transform.position, endPosOutput, true);
     }

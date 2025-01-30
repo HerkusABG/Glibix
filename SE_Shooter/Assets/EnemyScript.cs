@@ -1,59 +1,139 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AI;
 public class EnemyScript : MonoBehaviour
 {
 
     public List<Vector2> movementDirections;
     public List<float> distances;
     public int enemyHealth;
-    public int moveCycle, moveCycleCurrent;
+    public int moveCycleInterval, moveCycleCurrent;
+    public int specialCycleInterval, specialCycleCurrent;
+    public bool hasSpecialAbility;
 
+    public delegate void SpecialAttackAction();
+    public event SpecialAttackAction specialAttackEvent;
+
+    
+    public bool isDead;
+
+    [SerializeField]
+    EnemyManager enemyManagerAccess;
+    //TurnScript.restartGameEvent += RefereeReset;   
+    //public void CallNewWaveEvent()
+    //{
+    //if (newWaveEvent != null)
+    //{
+    //  Debug.Log("calling new wave event");
+    //    newWaveEvent();
+    //  }
+    //}
+
+    public int myChoice;
+    
     private void Start()
     {
-        enemyHealth = 4;
-        moveCycle = 2;
+        enemyHealth = 1;
+        moveCycleInterval = 2;
         moveCycleCurrent = 0;
+        specialCycleInterval = 3;
+        specialCycleCurrent = 0;
+    }
+
+    private void Awake()
+    {
+        isDead = false;
+    }
+
+    public void EnemySetUp()
+    {
+        enemyManagerAccess.enemyCount++;
     }
     public void MoveEnemy(Transform playerTransform)
     {
-        moveCycleCurrent++;
-        if(moveCycleCurrent >= moveCycle)
+        
+        if(!isDead)
         {
-            MeasureDistances(playerTransform.position);
-            Vector3 possibleDelta;
-            int outcomeId;
-            for (int i = 0; i < movementDirections.Count; i++)
+            if (hasSpecialAbility)
             {
-                possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
-                outcomeId = TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false);
-                if (outcomeId == 1)
+                specialCycleCurrent++;
+                if (specialCycleCurrent >= specialCycleInterval)
                 {
-                    Destroy(playerTransform.gameObject);
-                    Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
-                    break;
-                }
-                else if (outcomeId == 3)
-                {
-                    Interpolator.instance.InterpolateMovement(gameObject, transform.position, transform.position + possibleDelta, false);
-                    break;
+                    CallSpecialAttackEvent();
+                    specialCycleCurrent = 0;
                 }
             }
-            moveCycleCurrent = 0;
+            moveCycleCurrent++;
+            if (moveCycleCurrent >= moveCycleInterval)
+            {
+                Debug.Log("moving");
+                MeasureDistances(playerTransform.position);
+                Vector3 possibleDelta;
+                int outcomeId;
+                bool isNotSteppingOnOthers;
+                for (int i = 0; i < movementDirections.Count; i++)
+                {
+                    isNotSteppingOnOthers = true;
+                    possibleDelta = new Vector3(movementDirections[i].x, 0, movementDirections[i].y);
+                    foreach(Vector3 pickedPosition in enemyManagerAccess.pickedPositionList)
+                    {
+                        if((transform.position + possibleDelta) == pickedPosition)
+                        {
+                            isNotSteppingOnOthers = false;
+                        }
+                    }
+                    if(isNotSteppingOnOthers)
+                    {
+                        outcomeId = TileDetector.instance.CanIMoveHere(transform.position, possibleDelta, false);
+                        myChoice = i;
+                        if (outcomeId == 1)
+                        {
+                            Destroy(playerTransform.gameObject);
+                            Vector3 enemyEndPosition = transform.position + possibleDelta;
+                            Interpolator.instance.InterpolateMovement(gameObject, transform.position, enemyEndPosition, false);
+                            enemyManagerAccess.pickedPositionList.Add(enemyEndPosition);
+                            break;
+                        }
+                        else if (outcomeId == 3)
+                        {
+                            Vector3 enemyEndPosition = transform.position + possibleDelta;
+                            Interpolator.instance.InterpolateMovement(gameObject, transform.position, enemyEndPosition, false);
+                            enemyManagerAccess.pickedPositionList.Add(enemyEndPosition);
+                            break;
+                        }
+                    }
+                   
+                }
+                moveCycleCurrent = 0;
+            }     
+        } 
+    }
+    public void CallSpecialAttackEvent()
+    {
+        if (specialAttackEvent != null)
+        {
+            specialAttackEvent();
         }
     }
-    
 
-    public bool TakeDamageAndCheckIfDead()
+    public int TakeDamageAndCheckIfDead()
     {
         Debug.Log("took damage");
         enemyHealth--;
         if(enemyHealth <= 0)
         {
-            return true;
+            if(enemyManagerAccess.AreAllEnemiesDead())
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
         else
         {
-            return false;
+            return 2;
         }
     }
     private void MeasureDistances(Vector3 playerLocVector)

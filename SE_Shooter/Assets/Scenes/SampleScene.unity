@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 514925492}
   - component: {fileID: 514925491}
   - component: {fileID: 514925490}
+  - component: {fileID: 514925494}
   m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
@@ -271,6 +272,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514925494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514925489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee81d2a66dbaf6409a3b422af1ee214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectionStatus: 0
+  stringy: 
 --- !u!1 &546238571
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,12 +318,14 @@ MonoBehaviour:
   tileInstance: {fileID: 514925489}
   enemyInstance: {fileID: 1886973121}
   obstacleInstance: {fileID: 1156312445}
-  fieldDimensions: {x: 6, y: 8}
+  fieldDimensions: {x: 14, y: 12}
   playerSpawnDimensions: {x: 0, y: 0}
-  enemySpawnDimensions: {x: 2, y: 3}
   obstacleSpawnDimensions: {x: 4, y: 4}
+  howManyObstacles: 70
   playerMovementAccess: {fileID: 1350917297}
   turnManagerAccess: {fileID: 1323604823}
+  floorObjects: []
+  obstacleObjects: []
 --- !u!4 &546238573
 Transform:
   m_ObjectHideFlags: 0
@@ -621,6 +638,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1283285103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1283285105}
+  - component: {fileID: 1283285104}
+  m_Layer: 0
+  m_Name: EnemyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1283285104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283285103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c3c09fbf03c4b459edce4e98c8e259, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickedPositionList: []
+  enemyCount: 0
+  levelGeneratorAccess: {fileID: 546238572}
+--- !u!4 &1283285105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283285103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6610123, y: -0.32574534, z: 20.953741}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1323604822
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,6 +716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyList: []
   playerMovementAccess: {fileID: 1350917297}
+  enemyManagerAccess: {fileID: 1283285104}
 --- !u!4 &1323604824
 Transform:
   m_ObjectHideFlags: 0
@@ -869,6 +934,7 @@ GameObject:
   - component: {fileID: 1886973123}
   - component: {fileID: 1886973122}
   - component: {fileID: 1886973126}
+  - component: {fileID: 1886973127}
   m_Layer: 7
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -980,14 +1046,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDirections:
-  - {x: 1, y: 0}
   - {x: 0, y: 1}
   - {x: -1, y: 0}
   - {x: 0, y: -1}
+  - {x: 1, y: 0}
   distances: []
   enemyHealth: 0
-  moveCycle: 0
+  moveCycleInterval: 0
   moveCycleCurrent: 0
+  specialCycleInterval: 0
+  specialCycleCurrent: 0
+  hasSpecialAbility: 1
+  isDead: 0
+  enemyManagerAccess: {fileID: 1283285104}
+  myChoice: 0
+--- !u!114 &1886973127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886973121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a156131b9900049934c7d86bea909e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelGeneratorAccess: {fileID: 546238572}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1001,3 +1086,4 @@ SceneRoots:
   - {fileID: 1323604824}
   - {fileID: 1830793715}
   - {fileID: 1156312449}
+  - {fileID: 1283285105}

@@ -8,16 +8,37 @@ public class TurnManager : MonoBehaviour
     public List<EnemyScript> enemyList;
     [SerializeField]
     PlayerMovement playerMovementAccess;
+    [SerializeField]
+    EnemyManager enemyManagerAccess;
 
     public IEnumerator ExecuteEnemyTurns(Transform playerTransformInput)
     {
-        foreach(EnemyScript enemy in enemyList)
+        Debug.Log("enemy turns commence");
+        enemyManagerAccess.pickedPositionList.Clear();
+        /* foreach (EnemyScript enemy in enemyList)
+         {
+             if(enemy != null)
+             { 
+                 if(!enemy.justAwoken)
+                 {
+                     enemy.MoveEnemy(playerTransformInput);
+                 }
+                 else
+                 {
+                    // enemy.justAwoken = false;
+                 }
+
+             }       
+         } */
+        int cycleCount = enemyList.Count;
+        for(int i = 0; i < cycleCount; i++)
         {
-            if(enemy != null)
+            if(enemyList[i] != null)
             {
-                enemy.MoveEnemy(playerTransformInput);
-            }       
-        }
+               enemyList[i].MoveEnemy(playerTransformInput);
+
+            }
+        } 
         yield return new WaitForSeconds(0.125f);
         playerMovementAccess.canMove = true;
     }

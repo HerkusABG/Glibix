@@ -19,6 +19,7 @@ public class TileDetector : MonoBehaviour
         {
             if(hitInfo.transform.GetComponent<EnemyScript>() != null)
             {
+                //enemy
                 if(isPlayer)
                 {
                     targetEnemy = hitInfo.transform.gameObject;
@@ -27,21 +28,25 @@ public class TileDetector : MonoBehaviour
             }
             else if(hitInfo.transform.GetComponent<PlayerMovement>() != null)
             {
+                //player
                 return 1;
             }
             else if(hitInfo.transform.gameObject.layer == 9)
             {
+                //Obstacle
                 Debug.Log("detected obstacle");
                 return 2;
             }
             else
             {
+                //Ground
                 return 3;
             }
         }
         else
         {
-            return 3;
+            //nothing
+            return 4;
         }
     }
 }
