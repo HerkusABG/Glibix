@@ -19,7 +19,7 @@ public class TileScript : MonoBehaviour
         connectionStatus = 1;
         for (int i = 0; i < 4; i++)
         {
-            if(Physics.Raycast(transform.position, new Vector3(rayDirections[i].x, 0 , rayDirections[i].y), out hit, 2))
+            if(Physics.Raycast(transform.position, new Vector3(rayDirections[i].x, 0 , rayDirections[i].y), out hit, 1))
             {
                 Debug.DrawRay(transform.position, new Vector3(rayDirections[i].x, 0, rayDirections[i].y), Color.red, 4);
                 if (hit.transform.GetComponent<TileScript>())

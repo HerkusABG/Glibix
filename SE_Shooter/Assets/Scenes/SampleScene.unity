@@ -318,10 +318,11 @@ MonoBehaviour:
   tileInstance: {fileID: 514925489}
   enemyInstance: {fileID: 1886973121}
   obstacleInstance: {fileID: 1156312445}
-  fieldDimensions: {x: 14, y: 12}
+  fieldDimensions: {x: 20, y: 20}
   playerSpawnDimensions: {x: 0, y: 0}
   obstacleSpawnDimensions: {x: 4, y: 4}
-  howManyObstacles: 70
+  howManyObstacles: 18
+  deprecationFactor: 0.8
   playerMovementAccess: {fileID: 1350917297}
   turnManagerAccess: {fileID: 1323604823}
   enemyManagerAccess: {fileID: 1283285104}

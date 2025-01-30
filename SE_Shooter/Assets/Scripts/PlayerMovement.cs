@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInputFloat = Input.GetAxisRaw("Horizontal");
         verticalInputFloat = Input.GetAxisRaw("Vertical");
-        if(horizontalInputFloat != 0 || verticalInputFloat != 0)
+        if(horizontalInputFloat != 0 ^ verticalInputFloat != 0)
         {
             return true;
         }

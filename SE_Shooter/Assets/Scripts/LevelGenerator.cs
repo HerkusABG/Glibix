@@ -16,6 +16,7 @@ public class LevelGenerator : MonoBehaviour
     Vector2 obstacleSpawnDimensions;
   
     public int howManyObstacles;
+    public float deprecationFactor;
 
     
     public PlayerMovement playerMovementAccess;
@@ -37,9 +38,15 @@ public class LevelGenerator : MonoBehaviour
     [HideInInspector]
     public GameObject initialCubeInstance;
 
+    bool playerGeneratedOnTile;
+
     
     void Start()
     {
+        if(deprecationFactor == 0)
+        {
+            deprecationFactor = 1;
+        }
         enoughConnectedTiles = false;
 
        // StartCoroutine(GenerationCoroutine());
@@ -57,7 +64,7 @@ public class LevelGenerator : MonoBehaviour
             GenerateNewLevel();
         }
         yield return new WaitForEndOfFrame();
-
+        SpawnPlayer();
         SpawnEnemies(7);
     }
 
@@ -79,16 +86,17 @@ public class LevelGenerator : MonoBehaviour
 
         GenerateFloor((int)fieldDimensions.x, (int)fieldDimensions.y);
         SpawnObstacles(howManyObstacles);
-        SpawnPlayer();
+        
         InitiateTileCheck();
         CheckConnectedTileCount();
         PurgeClosedOffTiles();
+        
         //SpawnEnemies(7);
     }
     public void InitiateTileCheck()
     {
         RaycastHit hit;
-        if (Physics.Raycast(playerMovementAccess.transform.position, -transform.up, out hit, 2))
+        if (Physics.Raycast(new Vector3((int)(fieldDimensions.x * 0.5f), 1, (int)(fieldDimensions.x * 0.5f)), -transform.up, out hit, 2))
         {
             if (hit.transform.GetComponent<TileScript>())
             {
@@ -106,11 +114,12 @@ public class LevelGenerator : MonoBehaviour
 
     private Vector3 FindFreeSpot()
     {
-        Vector3 freeSpotLocation = new Vector3((int)Random.Range(0, (int)fieldDimensions.x), 1, (int)Random.Range(0, (int)fieldDimensions.y) + 1);
+        Vector3 freeSpotLocation = new Vector3((int)Random.Range(0, (int)fieldDimensions.x), 1, (int)Random.Range(0, (int)fieldDimensions.y));
+        Debug.Log(freeSpotLocation);
         int outcomeId = TileDetector.instance.CanIMoveHere(freeSpotLocation, new Vector3(0, 0, 0), false);
         while (outcomeId != 3)
         {
-            freeSpotLocation = new Vector3((int)Random.Range(0, (int)fieldDimensions.x), 1, (int)Random.Range(0, (int)fieldDimensions.y) + 1);
+            freeSpotLocation = new Vector3((int)Random.Range(0, (int)fieldDimensions.x), 1, (int)Random.Range(0, (int)fieldDimensions.y));
             outcomeId = TileDetector.instance.CanIMoveHere(freeSpotLocation, new Vector3(0, 0, 0), false);
             
         }
@@ -137,7 +146,7 @@ public class LevelGenerator : MonoBehaviour
             Vector3 obstacleSpawnLocation = FindFreeSpot();
 
             GameObject obstacleClone = Instantiate(obstacleInstance, obstacleSpawnLocation, Quaternion.identity);
-            Debug.Log("Spawned");
+            //Debug.Log("Spawned");
             obstacleClone.SetActive(true);
             obstacleObjects.Add(obstacleClone);
         }
@@ -146,14 +155,19 @@ public class LevelGenerator : MonoBehaviour
     {
         GameObject parent = new GameObject("floor_parent");
         floorObjects.Add(parent);
+
         for (int x = 0; x < inputX; x++)
         {
             for (int y = 0; y < inputY; y++)
             {
-               GameObject tileClone =  Instantiate(tileInstance, new Vector3(x, 0, y), Quaternion.identity);
-                tileClone.SetActive(true);
-                floorObjects.Add(tileClone);
-                tileClone.transform.SetParent(parent.transform);
+                if(Random.Range(1, 11) < deprecationFactor * 10)
+                {
+                    GameObject tileClone = Instantiate(tileInstance, new Vector3(x, 0, y), Quaternion.identity);
+                    tileClone.SetActive(true);
+                    floorObjects.Add(tileClone);
+                    tileClone.transform.SetParent(parent.transform);
+                }
+                
             }
         } 
     }
@@ -219,13 +233,13 @@ public class LevelGenerator : MonoBehaviour
             enoughConnectedTiles = true;
             //SpawnEnemies(7);
 
-            Debug.Log("enough");
+            //Debug.Log("enough");
         }
         else
         {
             enoughConnectedTiles = false;
 
-            Debug.Log("not enough");
+           // Debug.Log("not enough");
         }
         
     }
