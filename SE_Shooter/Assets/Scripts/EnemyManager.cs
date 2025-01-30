@@ -8,8 +8,7 @@ public class EnemyManager : MonoBehaviour
 
     public int enemyCount;
 
-    [SerializeField]
-    LevelGenerator levelGeneratorAccess;
+
 
     [SerializeField]
     GameManager gameManagerAccess;

@@ -22,8 +22,6 @@ public class LevelGenerator : MonoBehaviour
     
     public PlayerMovement playerMovementAccess;
 
-    [SerializeField]
-    TurnManager turnManagerAccess;
 
     [SerializeField]
     GameManager gameManagerAccess;
