@@ -17,8 +17,14 @@ public class EnemyManager : MonoBehaviour
     private void Awake()
     {
         enemyCount = 0;
+        gameManagerAccess.preRestartEvent += ResetEnemyManager;
     }
 
+
+    private void ResetEnemyManager()
+    {
+        enemyCount = 0;
+    }
     public bool AreAllEnemiesDead()
     {
         enemyCount--;

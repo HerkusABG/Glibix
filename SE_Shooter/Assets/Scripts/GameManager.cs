@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         RestartGameLogic();
-       // restartEvent += RestartGameLogic;
+        // restartEvent += RestartGameLogic;
+        //CallPreRestartEvent();
     }
     public void CallRestartEvent()
     {

@@ -14,6 +14,7 @@ public class UiManager : MonoBehaviour
     GameManager gameManagerAccess;
     private void Start()
     {
+        panel.GetComponent<Image>().color = fullColor;
         gameManagerAccess.playerDeathEvent += UiGameLost;
         gameManagerAccess.restartEvent += ResetUi;
         gameManagerAccess.preRestartEvent += BeginResetUi;

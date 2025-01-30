@@ -14,6 +14,7 @@ public class LevelGenerator : MonoBehaviour
     Vector2 playerSpawnDimensions;
     [SerializeField]
     Vector2 obstacleSpawnDimensions;
+    public int howManyEnemies;
   
     public int howManyObstacles;
     public float deprecationFactor;
@@ -67,9 +68,11 @@ public class LevelGenerator : MonoBehaviour
             GenerateNewLevel();
         }
         yield return new WaitForEndOfFrame();
-        gameManagerAccess.CallRestartEvent();
+        
         SpawnPlayer();
-        SpawnEnemies(6);
+        yield return new WaitForEndOfFrame();
+        SpawnEnemies(howManyEnemies);
+        gameManagerAccess.CallRestartEvent();
     }
 
     
@@ -164,6 +167,7 @@ public class LevelGenerator : MonoBehaviour
                     GameObject tileClone = Instantiate(tileInstance, new Vector3(x, 0, y), Quaternion.identity);
                     tileClone.SetActive(true);
                     floorObjects.Add(tileClone);
+                    tileClone.gameObject.name = "Cube " + x + " " + y;
                     tileClone.transform.SetParent(parent.transform);
                 }
                 
