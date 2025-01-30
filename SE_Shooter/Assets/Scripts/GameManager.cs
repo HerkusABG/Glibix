@@ -7,16 +7,21 @@ public class GameManager : MonoBehaviour
 
     public bool isGameLost;
 
+    [SerializeField]
+    UiManager uiManagerAccess;
 
     public delegate void PlayerDeathAction();
     public event PlayerDeathAction playerDeathEvent;
 
     public delegate void RestartAction();
     public event RestartAction restartEvent;
+
+    public delegate void PreRestartAction();
+    public event PreRestartAction preRestartEvent;
     private void Start()
     {
-        StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
-        
+        RestartGameLogic();
+       // restartEvent += RestartGameLogic;
     }
     public void CallRestartEvent()
     {
@@ -33,17 +38,31 @@ public class GameManager : MonoBehaviour
             playerDeathEvent();
         }
     }
+    public void CallPreRestartEvent()
+    {
+        if (preRestartEvent != null)
+        {
+            preRestartEvent();
+        }
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
             if(isGameLost)
             {
-                isGameLost = false;
-                CallRestartEvent();
-                StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
+               
+                //CallRestartEvent();
+                CallPreRestartEvent();
+                //StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
             }
             
         }
+    }
+
+    public void RestartGameLogic()
+    {
+        isGameLost = false;
+        StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
     }
 }

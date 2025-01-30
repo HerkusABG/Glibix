@@ -25,6 +25,9 @@ public class LevelGenerator : MonoBehaviour
     TurnManager turnManagerAccess;
 
     [SerializeField]
+    GameManager gameManagerAccess;
+
+    [SerializeField]
     public EnemyManager enemyManagerAccess;
 
     public List<GameObject> floorObjects = new List<GameObject>();
@@ -64,8 +67,9 @@ public class LevelGenerator : MonoBehaviour
             GenerateNewLevel();
         }
         yield return new WaitForEndOfFrame();
+        gameManagerAccess.CallRestartEvent();
         SpawnPlayer();
-        SpawnEnemies(7);
+        SpawnEnemies(6);
     }
 
     
@@ -202,9 +206,7 @@ public class LevelGenerator : MonoBehaviour
                 if (floorObject.GetComponent<TileScript>().connectionStatus == 0)
                 {
                     floorObject.GetComponent<TileScript>().IsWallTile();
-
                     Destroy(floorObject);
-                    //floorObject.SetActive(false);
                 }
             }
            
@@ -226,15 +228,10 @@ public class LevelGenerator : MonoBehaviour
         if(connectedTileCount > ((int)fieldDimensions.x * (int)fieldDimensions.y - obstacleObjects.Count) * 0.5f)
         {
             enoughConnectedTiles = true;
-            //SpawnEnemies(7);
-
-            //Debug.Log("enough");
         }
         else
         {
             enoughConnectedTiles = false;
-
-           // Debug.Log("not enough");
         }
         
     }

@@ -11,6 +11,9 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     LevelGenerator levelGeneratorAccess;
 
+    [SerializeField]
+    GameManager gameManagerAccess;
+
     private void Awake()
     {
         enemyCount = 0;
@@ -23,7 +26,8 @@ public class EnemyManager : MonoBehaviour
         {
             Debug.Log("Spawn new wave!");
             //levelGeneratorAccess.GenerateNewLevel();
-            StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
+            //StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
+            gameManagerAccess.CallPreRestartEvent();
             return true;
         }
         else
