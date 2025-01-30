@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
     public List<Vector3> pickedPositionList;
+    public List<EnemyScript> enemyList;
 
     public int enemyCount;
 
@@ -21,13 +22,25 @@ public class EnemyManager : MonoBehaviour
         if (enemyCount <= 0)
         {
             Debug.Log("Spawn new wave!");
-            levelGeneratorAccess.GenerateNewLevel();
-
+            //levelGeneratorAccess.GenerateNewLevel();
+            StartCoroutine(levelGeneratorAccess.GenerationCoroutine());
             return true;
         }
         else
         {
             return false;
+        }
+    }
+
+    public void DeleteAllEnemies()
+    {
+        foreach(EnemyScript enemy in enemyList)
+        {
+            if(enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+            
         }
     }
 

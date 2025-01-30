@@ -324,8 +324,11 @@ MonoBehaviour:
   howManyObstacles: 70
   playerMovementAccess: {fileID: 1350917297}
   turnManagerAccess: {fileID: 1323604823}
+  enemyManagerAccess: {fileID: 1283285104}
   floorObjects: []
   obstacleObjects: []
+  enoughConnectedTiles: 0
+  connectedTileCount: 0
 --- !u!4 &546238573
 Transform:
   m_ObjectHideFlags: 0
@@ -668,6 +671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedPositionList: []
+  enemyList: []
   enemyCount: 0
   levelGeneratorAccess: {fileID: 546238572}
 --- !u!4 &1283285105
@@ -714,7 +718,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98aef2a2eb940404fbd4e237e6527031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyList: []
   playerMovementAccess: {fileID: 1350917297}
   enemyManagerAccess: {fileID: 1283285104}
 --- !u!4 &1323604824

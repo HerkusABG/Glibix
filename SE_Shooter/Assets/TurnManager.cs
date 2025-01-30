@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class TurnManager : MonoBehaviour
 {
-    public List<EnemyScript> enemyList;
     [SerializeField]
     PlayerMovement playerMovementAccess;
     [SerializeField]
@@ -30,12 +29,12 @@ public class TurnManager : MonoBehaviour
 
              }       
          } */
-        int cycleCount = enemyList.Count;
+        int cycleCount = enemyManagerAccess.enemyList.Count;
         for(int i = 0; i < cycleCount; i++)
         {
-            if(enemyList[i] != null)
+            if(enemyManagerAccess.enemyList[i] != null)
             {
-               enemyList[i].MoveEnemy(playerTransformInput);
+                enemyManagerAccess.enemyList[i].MoveEnemy(playerTransformInput);
 
             }
         } 
