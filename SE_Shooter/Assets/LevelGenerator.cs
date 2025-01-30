@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -26,8 +27,8 @@ public class LevelGenerator : MonoBehaviour
     public List<GameObject> floorObjects;
     public List<GameObject> obstacleObjects;
 
-    bool enoughConnectedTiles;
-    int connectedTileCount;
+    public bool enoughConnectedTiles;
+    public int connectedTileCount;
 
     Vector2[] directions = new Vector2[4] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
     //directions[0] = new Vector2(0,0);
@@ -35,34 +36,73 @@ public class LevelGenerator : MonoBehaviour
     
     void Start()
     {
+        enoughConnectedTiles = false;
+
+        StartCoroutine(GenerationCoroutine());
+    }
+
+    private IEnumerator GenerationCoroutine()
+    {
         GenerateNewLevel();
+        while(!enoughConnectedTiles)
+        {
+            yield return new WaitForEndOfFrame();
+            //Invoke("GenerateNewLevel", 3);
+            GenerateNewLevel();
+        }
+        /*for (int i = 0; i < 30; i++)
+        {
+            Debug.Log("loop " + i);
+            //yield return new WaitForSeconds(0.125f);
+            yield return new WaitForEndOfFrame();
+            //Invoke("GenerateNewLevel", 3);
+            GenerateNewLevel();
+        }*/
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.O))
         {
-            GenerateNewLevel();
+            enoughConnectedTiles = false;
+            StartCoroutine(GenerationCoroutine());
         }
+    }
+
+    private void GenerateLevelInitial()
+    {
+
     }
 
     public void GenerateNewLevel()
     {
-        enoughConnectedTiles = false;
-        connectedTileCount = 0;
-        floorObjects.Clear();
-        obstacleObjects.Clear();
 
-        while (!enoughConnectedTiles)
-        {
+            connectedTileCount = 0;
             DeleteOldAssets();
+
+            floorObjects.Clear();
+            obstacleObjects.Clear();
+
             GenerateFloor((int)fieldDimensions.x, (int)fieldDimensions.y);
             SpawnObstacles(howManyObstacles);
             SpawnPlayer();
             CheckConnectedTileCount();
-        }
-        
 
+        /*if (!enoughConnectedTiles)
+        {
+            connectedTileCount = 0;
+            DeleteOldAssets();
+            floorObjects.Clear();
+            obstacleObjects.Clear();
+            //GenerateFloor((int)fieldDimensions.x, (int)fieldDimensions.y);
+            //SpawnObstacles(howManyObstacles);
+            //SpawnPlayer();
+            //enoughConnectedTiles = true;
+            //CheckConnectedTileCount();
+        }  */
+
+
+        //enoughConnectedTiles = false;
 
         PurgeClosedOffTiles();
         //SpawnEnemies(7);
@@ -149,14 +189,17 @@ public class LevelGenerator : MonoBehaviour
         {
             Destroy(floorObjects[0]);
         }
-        
-        foreach (GameObject obstacle in obstacleObjects)
+        if(obstacleObjects.Count > 0)
+        {
+            Destroy(obstacleObjects[0]);
+        }
+        /*foreach (GameObject obstacle in obstacleObjects)
         {
             if (obstacle != null)
             {
                 Destroy(obstacle);
             }
-        }
+        } */
         
     }
     private void PurgeClosedOffTiles()
@@ -189,9 +232,16 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-        if(connectedTileCount > (((int)fieldDimensions.x * (int)fieldDimensions.y) - howManyObstacles) * 0.1f)
+        if(connectedTileCount > ((int)fieldDimensions.x * (int)fieldDimensions.y - obstacleObjects.Count) * 0.5f)
         {
             enoughConnectedTiles = true;
+            Debug.Log("enough");
+        }
+        else
+        {
+            enoughConnectedTiles = false;
+
+            Debug.Log("not enough");
         }
         
     }
