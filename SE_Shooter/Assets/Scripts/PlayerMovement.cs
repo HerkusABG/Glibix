@@ -56,25 +56,12 @@ public class PlayerMovement : MonoBehaviour
             return false;
         }
     }
-    private Vector3 GetInputsAsVector()
+    public Vector3 GetInputsAsVector()
     {
         transformDelta = new Vector3(horizontalInputFloat, 0, verticalInputFloat);
         return transformDelta;
     }
 
-    /*private bool CanIMoveHere(Vector3 inputDelta)
-    {
-        Vector3 rayStartPos = transform.position + inputDelta;
-        Debug.DrawRay(rayStartPos, Vector3.down * 3, Color.magenta, 5);
-        if(Physics.Raycast(rayStartPos, Vector3.down, 3, groundLayerMask))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    } */
     private void MovePlayer()
     {
         Vector3 endPosOutput = transform.position + transformDelta;

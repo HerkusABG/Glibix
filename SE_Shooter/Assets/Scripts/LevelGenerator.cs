@@ -9,104 +9,99 @@ public class LevelGenerator : MonoBehaviour
     public GameObject enemyInstance;
     public GameObject obstacleInstance;
 
-    [SerializeField]
-    Vector2 fieldDimensions;
+    public Vector2 fieldDimensions;
     [SerializeField]
     Vector2 playerSpawnDimensions;
     [SerializeField]
     Vector2 obstacleSpawnDimensions;
-    [SerializeField]
-    int howManyObstacles;
+  
+    public int howManyObstacles;
 
-    [SerializeField]
-    PlayerMovement playerMovementAccess;
+    
+    public PlayerMovement playerMovementAccess;
 
     [SerializeField]
     TurnManager turnManagerAccess;
 
     [SerializeField]
-    EnemyManager enemyManagerAccess;
+    public EnemyManager enemyManagerAccess;
 
-    public List<GameObject> floorObjects;
-    public List<GameObject> obstacleObjects;
+    public List<GameObject> floorObjects = new List<GameObject>();
+    public List<GameObject> obstacleObjects = new List<GameObject>();
 
     public bool enoughConnectedTiles;
     public int connectedTileCount;
 
     Vector2[] directions = new Vector2[4] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
-    //directions[0] = new Vector2(0,0);
+
+    [HideInInspector]
+    public GameObject initialCubeInstance;
 
     
     void Start()
     {
         enoughConnectedTiles = false;
 
-        StartCoroutine(GenerationCoroutine());
+       // StartCoroutine(GenerationCoroutine());
     }
 
     public IEnumerator GenerationCoroutine()
     {
+        enoughConnectedTiles = false;
+
         GenerateNewLevel();
+
         while(!enoughConnectedTiles)
         {
             yield return new WaitForEndOfFrame();
-            //Invoke("GenerateNewLevel", 3);
             GenerateNewLevel();
         }
         yield return new WaitForEndOfFrame();
 
         SpawnEnemies(7);
-        /*for (int i = 0; i < 30; i++)
-        {
-            Debug.Log("loop " + i);
-            //yield return new WaitForSeconds(0.125f);
-            yield return new WaitForEndOfFrame();
-            //Invoke("GenerateNewLevel", 3);
-            GenerateNewLevel();
-        }*/
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.O))
         {
-            enoughConnectedTiles = false;
+            
             StartCoroutine(GenerationCoroutine());
         }
     }
 
     public void GenerateNewLevel()
     {
-            connectedTileCount = 0;
-            DeleteOldAssets();
-            floorObjects.Clear();
-            obstacleObjects.Clear();
+        connectedTileCount = 0;
+        DeleteOldAssets();
+        floorObjects.Clear();
+        obstacleObjects.Clear();
 
-            GenerateFloor((int)fieldDimensions.x, (int)fieldDimensions.y);
-            SpawnObstacles(howManyObstacles);
-            SpawnPlayer();
-
+        GenerateFloor((int)fieldDimensions.x, (int)fieldDimensions.y);
+        SpawnObstacles(howManyObstacles);
+        SpawnPlayer();
+        InitiateTileCheck();
         CheckConnectedTileCount();
         PurgeClosedOffTiles();
         //SpawnEnemies(7);
     }
-    private void PostGenerationLogic()
+    public void InitiateTileCheck()
     {
-    }
-
-    private void SpawnPlayer()
-    {
-        Vector3 playerSpawnLocation = FindFreeSpot();
-        //playerMovementAccess.gameObject.transform.position = new Vector3(playerSpawnDimensions.x, 1, playerSpawnDimensions.y);
-        playerMovementAccess.gameObject.transform.position = playerSpawnLocation;
         RaycastHit hit;
         if (Physics.Raycast(playerMovementAccess.transform.position, -transform.up, out hit, 2))
         {
-            if(hit.transform.GetComponent<TileScript>())
+            if (hit.transform.GetComponent<TileScript>())
             {
                 hit.transform.GetComponent<TileScript>().FindConnectedTiles(directions);
             }
         }
+    }
+
+    public void SpawnPlayer()
+    {
+        Vector3 playerSpawnLocation = FindFreeSpot();
+        playerMovementAccess.gameObject.transform.position = playerSpawnLocation;
+       
     }
 
     private Vector3 FindFreeSpot()
@@ -147,9 +142,9 @@ public class LevelGenerator : MonoBehaviour
             obstacleObjects.Add(obstacleClone);
         }
     }
-    private void GenerateFloor(int inputX, int inputY)
+    public void GenerateFloor(int inputX, int inputY)
     {
-        GameObject parent = new GameObject("floorParent");
+        GameObject parent = new GameObject("floor_parent");
         floorObjects.Add(parent);
         for (int x = 0; x < inputX; x++)
         {
@@ -160,7 +155,7 @@ public class LevelGenerator : MonoBehaviour
                 floorObjects.Add(tileClone);
                 tileClone.transform.SetParent(parent.transform);
             }
-        }
+        } 
     }
     private void DeleteOldAssets()
     {
@@ -207,7 +202,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    private void CheckConnectedTileCount()
+    public void CheckConnectedTileCount()
     {
         foreach (GameObject floorObject in floorObjects)
         {
